@@ -32,8 +32,8 @@ To run this code follow steps similar to running one of the ClojureDart [sample 
    clj -M:cljd flutter -d macos
 ```
 
-There is no license or warranty or claim of fitfulness or anything of the kind
-for this project, within which what I could genuinely call my own creation
-comprises only a single file: `main.cljd`. It is merely a byproduct of my
-experimentation and learning process which I'm putting out there in case it
-happens to be of any use to anyone.
+There is no license or warranty or claim of fitness or anything of the kind for
+this project, within which what I could genuinely call my own creation comprises
+only a single file: `main.cljd`. It is merely a byproduct of my experimentation
+and learning process which I'm putting out there in case it happens to be of any
+use to anyone.
