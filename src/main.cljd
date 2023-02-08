@@ -55,30 +55,32 @@
 (defn MyHomePage [state]
   (let [selected-index (atom 0)]
     (m/LayoutBuilder
-     .builder (f/build [^m/BoxConstraints constraints]
-                       :watch [i selected-index]
-                       m/Scaffold
-                       .body
-                       m/Row
-                       .children
-                       [(f/widget
-                         m/SafeArea
-                         (m/NavigationRail
-                          .extended (>= (.-maxWidth constraints) 600)
-                          .destinations (for [[icon label] [[m/Icons.home "Home"]
-                                                            [m/Icons.favorite "Favorites"]]]
-                                          (m/NavigationRailDestination
-                                           .icon (m/Icon icon)
-                                           .label (m/Text label)))
-                          .selectedIndex i
-                          .onDestinationSelected #(reset! selected-index %)))
-                        (f/widget
-                         m/Expanded
-                         :get {{{color .-primaryContainer} .-colorScheme} m/Theme}
-                         (m/Container .color color)
-                         (case i
-                           0 (GeneratorPage state)
-                           1 (FavoritesPage state)))]))))
+     .builder
+     (f/build [^m/BoxConstraints constraints]
+              :watch [i selected-index]
+              m/Scaffold
+              .body
+              m/Row
+              .children
+              [(f/widget
+                m/SafeArea
+                (m/NavigationRail
+                 .extended (>= (.-maxWidth constraints) 600)
+                 .destinations
+                 (for [[icon label] [[m/Icons.home "Home"]
+                                     [m/Icons.favorite "Favorites"]]]
+                   (m/NavigationRailDestination
+                    .icon (m/Icon icon)
+                    .label (m/Text label)))
+                 .selectedIndex i
+                 .onDestinationSelected #(reset! selected-index %)))
+               (f/widget
+                m/Expanded
+                :get {{{color .-primaryContainer} .-colorScheme} m/Theme}
+                (m/Container .color color)
+                (case i
+                  0 (GeneratorPage state)
+                  1 (FavoritesPage state)))]))))
 
 (defn main []
   (let [state (atom {:current (.random w/WordPair) :favorites #{}})]
