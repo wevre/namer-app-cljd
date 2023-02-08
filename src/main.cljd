@@ -17,9 +17,7 @@
   (f/widget
    (m/Column .mainAxisAlignment m/MainAxisAlignment.center)
    .children
-   [(f/widget
-     :watch [{:keys [current]} state]
-     (BigCard current))
+   [(BigCard (f/$ (:current (f/<! state))))
     (m/SizedBox .height 10)
     (f/widget
      :watch [{:keys [favorites current]} state]
@@ -36,54 +34,53 @@
        (m/Text "Next"))])]))
 
 (defn FavoritesPage [state]
-  (if (-> @state :favorites empty?)
-    (f/widget m/Center (m/Text "No favorites yet."))
-    (f/widget
-     :watch [{:keys [favorites]} state]
-     :let [cnt (count favorites)
-           plural-s (if (< 1 cnt) "s" "")
-           msg (str "You have " cnt " favorite" plural-s)]
-     (m/ListView
-      .children (cons
-                 (m/Padding .padding (m/EdgeInsets.all 20.0)
-                            .child (m/Text msg))
-                 (for [^w/WordPair item favorites]
-                   (m/ListTile
-                    .leading (m/Icon m/Icons.favorite)
-                    .title (m/Text (.-asLowerCase item)))))))))
+  (f/widget
+   :watch [favorites (f/$ (:favorites (f/<! state)))]
+   :let [widget (if (empty? favorites)
+                  (m/Center .child (m/Text "No favorites yet."))
+                  (f/widget
+                   :let [cnt (count favorites)
+                         plural-s (if (< 1 cnt) "s" "")
+                         msg (str "You have " cnt " favorite" plural-s)]
+                   (m/ListView
+                    .children (into
+                               [(m/Padding .padding (m/EdgeInsets.all 20.0)
+                                           .child (m/Text msg))]
+                               (for [^w/WordPair item favorites]
+                                 (m/ListTile
+                                  .leading (m/Icon m/Icons.favorite)
+                                  .title (m/Text (.-asLowerCase item))))))))]
+   widget))
 
 (defn MyHomePage [state]
   (let [selected-index (atom 0)]
     (m/LayoutBuilder
-     .builder (fn [_ ^m/BoxConstraints constraints]
-                (f/widget
-                 :watch [i selected-index]
-                 m/Scaffold
-                 .body
-                 m/Row
-                 .children
-                 [(f/widget
-                   m/SafeArea
-                   (m/NavigationRail
-                    .extended (>= (.-maxWidth constraints) 600)
-                    .destinations (for [[icon label] [[m/Icons.home "Home"]
-                                                      [m/Icons.favorite "Favorites"]]]
-                                    (m/NavigationRailDestination
-                                     .icon (m/Icon icon)
-                                     .label (m/Text label)))
-                    .selectedIndex i
-                    .onDestinationSelected #(reset! selected-index %)))
-                  (f/widget
-                   m/Expanded
-                   :get {{{color .-primaryContainer} .-colorScheme} m/Theme}
-                   (m/Container .color color)
-                   (case i
-                     0 (GeneratorPage state)
-                     1 (FavoritesPage state)))])))))
+     .builder (f/build [^m/BoxConstraints constraints]
+                       :watch [i selected-index]
+                       m/Scaffold
+                       .body
+                       m/Row
+                       .children
+                       [(f/widget
+                         m/SafeArea
+                         (m/NavigationRail
+                          .extended (>= (.-maxWidth constraints) 600)
+                          .destinations (for [[icon label] [[m/Icons.home "Home"]
+                                                            [m/Icons.favorite "Favorites"]]]
+                                          (m/NavigationRailDestination
+                                           .icon (m/Icon icon)
+                                           .label (m/Text label)))
+                          .selectedIndex i
+                          .onDestinationSelected #(reset! selected-index %)))
+                        (f/widget
+                         m/Expanded
+                         :get {{{color .-primaryContainer} .-colorScheme} m/Theme}
+                         (m/Container .color color)
+                         (case i
+                           0 (GeneratorPage state)
+                           1 (FavoritesPage state)))]))))
 
 (defn main []
-  ;; Creating state _here_ preserves it through hot reloads, which we want, but
-  ;; not during hot restarts, which we (probably) also want.
   (let [state (atom {:current (.random w/WordPair) :favorites #{}})]
     (f/run
      (m/MaterialApp

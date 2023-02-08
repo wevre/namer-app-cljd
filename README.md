@@ -3,6 +3,9 @@
 A port to ClojureDart of the "Your first Flutter app"
 [codelab](https://codelabs.developers.google.com/codelabs/flutter-codelab-first).
 
+<img src="resources/app-screenshot.png" alt="app screenshot" title="Screenshot"
+style="max-width: 600px; width: 100%">
+
 Created on 2023-02-07 using the latest versions of:
 
 - [Flutter](https://flutter.dev) 3.7.1
