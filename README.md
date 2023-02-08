@@ -1,16 +1,36 @@
 # namer_app_cljd
 
-A new Flutter project.
+A port to ClojureDart of the "Your first Flutter app"
+[codelab](https://codelabs.developers.google.com/codelabs/flutter-codelab-first).
 
-## Getting Started
+Created on 2023-02-07 using the latest versions of:
 
-This project is a starting point for a Flutter application.
+- [Flutter](https://flutter.dev) 3.7.1
+- [ClojureDart](https://github.com/Tensegritics/ClojureDart) SHA:811c526
 
-A few resources to get you started if this is your first Flutter project:
+To run this code follow steps similar to running one of the ClojureDart [sample projects](https://github.com/Tensegritics/ClojureDart#how-to-run-a-sample-project):
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Install [Flutter](https://docs.flutter.dev/get-started/install)
+- Install ClojureDart (follow the [Quick
+  Start](https://github.com/Tensegritics/ClojureDart/blob/main/doc/flutter-quick-start.md))
+- Clone this repository.
+- Initialize the project
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```
+   clj -M:cljd init
+```
+
+- Start the watcher
+
+```
+   clj -M:cljd flutter -d macos
+```
+
+Special shout-out to @cgrand for the [ClojureDart
+Cheatsheet](https://github.com/Tensegritics/ClojureDart/blob/main/doc/ClojureDart%20Cheatsheet.pdf)
+which was immensely helpful in putting this together.
+
+There is no license or warranty of any kind on this code, of which what I could
+genuinely call my own creation comprises only a single file: main.cljd. It is
+merely a byproduct of my experimentation and learning process which I'm putting
+out there in case it happens to be of any use to anyone.
