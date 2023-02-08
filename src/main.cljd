@@ -3,7 +3,7 @@
             ["package:english_words/english_words.dart" :as w]
             [cljd.flutter :as f]))
 
-(defn BigCard [^w/WordPair pair]
+(defn big-card [^w/WordPair pair]
   (f/widget
    :get {{{:flds [primary onPrimary]} .-colorScheme
           {:flds [displayMedium]} .-textTheme} m/Theme}
@@ -13,11 +13,11 @@
            .style (.copyWith displayMedium .color onPrimary)
            .semanticsLabel (.-asPascalCase pair))))
 
-(defn GeneratorPage [state]
+(defn generator-page [state]
   (f/widget
    (m/Column .mainAxisAlignment m/MainAxisAlignment.center)
    .children
-   [(BigCard (f/$ (:current (f/<! state))))
+   [(big-card (f/$ (:current (f/<! state))))
     (m/SizedBox .height 10)
     (f/widget
      :watch [{:keys [favorites current]} state]
@@ -33,26 +33,25 @@
        (m/ElevatedButton .onPressed #(swap! state assoc :current (.random w/WordPair)))
        (m/Text "Next"))])]))
 
-(defn FavoritesPage [state]
+(defn favorites-page [state]
   (f/widget
    :watch [favorites (f/$ (:favorites (f/<! state)))]
-   :let [widget (if (empty? favorites)
-                  (m/Center .child (m/Text "No favorites yet."))
-                  (f/widget
-                   :let [cnt (count favorites)
-                         plural-s (if (< 1 cnt) "s" "")
-                         msg (str "You have " cnt " favorite" plural-s)]
-                   (m/ListView
-                    .children (into
-                               [(m/Padding .padding (m/EdgeInsets.all 20.0)
-                                           .child (m/Text msg))]
-                               (for [^w/WordPair item favorites]
-                                 (m/ListTile
-                                  .leading (m/Icon m/Icons.favorite)
-                                  .title (m/Text (.-asLowerCase item))))))))]
-   widget))
+   (if (empty? favorites)
+     (m/Center .child (m/Text "No favorites yet."))
+     (f/widget
+      :let [cnt (count favorites)
+            plural-s (if (< 1 cnt) "s" "")
+            msg (str "You have " cnt " favorite" plural-s)]
+      (m/ListView
+       .children (into
+                  [(m/Padding .padding (m/EdgeInsets.all 20.0)
+                              .child (m/Text msg))]
+                  (for [^w/WordPair item favorites]
+                    (m/ListTile
+                     .leading (m/Icon m/Icons.favorite)
+                     .title (m/Text (.-asLowerCase item))))))))))
 
-(defn MyHomePage [state]
+(defn my-home-page [state]
   (let [selected-index (atom 0)]
     (m/LayoutBuilder
      .builder
@@ -79,8 +78,8 @@
                 :get {{{color .-primaryContainer} .-colorScheme} m/Theme}
                 (m/Container .color color)
                 (case i
-                  0 (GeneratorPage state)
-                  1 (FavoritesPage state)))]))))
+                  0 (generator-page state)
+                  1 (favorites-page state)))]))))
 
 (defn main []
   (let [state (atom {:current (.random w/WordPair) :favorites #{}})]
@@ -90,4 +89,4 @@
       .theme (m/ThemeData
               .useMaterial3 true
               .colorScheme (m/ColorScheme.fromSeed .seedColor m/Colors.deepOrange)))
-     .home (MyHomePage state))))
+     .home (my-home-page state))))
