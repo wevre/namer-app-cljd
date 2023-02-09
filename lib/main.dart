@@ -1,1 +1,1 @@
-export "cljd-out/namer-app/main.dart" show main;
+export "cljd-out/main.dart" show main;

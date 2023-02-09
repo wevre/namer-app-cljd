@@ -15,9 +15,10 @@
 
 (defn generator-page [state]
   (f/widget
+   :watch [current (f/$ (:current (f/<! state)))]
    (m/Column .mainAxisAlignment m/MainAxisAlignment.center)
    .children
-   [(big-card (f/$ (:current (f/<! state))))
+   [(big-card current)
     (m/SizedBox .height 10)
     (f/widget
      :watch [{:keys [favorites current]} state]
